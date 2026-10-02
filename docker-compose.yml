@@ -1,0 +1,26 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    environment:
+      DATABASE_URL: sqlite+aiosqlite:////data/agentlab.db
+      OPENAI_BASE_URL: mock://agentlab
+    ports:
+      - "8000:8000"
+    volumes:
+      - agentlab-data:/data
+
+  web:
+    build:
+      context: apps/web
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+volumes:
+  agentlab-data:
+
